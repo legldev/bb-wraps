@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  wraps     Wrap[]
+}
+
+model Wrap {
+  id        String     @id @default(cuid())
+  title     String
+  kind      String     // ej: "burgers"
+  year      Int
+  createdAt DateTime   @default(now())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  items     WrapItem[]
+}
+
+model WrapItem {
+  id        String   @id @default(cuid())
+  name      String
+  date      DateTime
+  notes     String?
+  createdAt DateTime @default(now())
+
+  wrapId    String
+  wrap      Wrap     @relation(fields: [wrapId], references: [id])
+}
