@@ -207,7 +207,8 @@ app.delete("/api/wraps/:id", auth, async (req: Request, res: Response) => {
 if (isProd) {
   const webDist = path.join(__dirname, "../../web/dist");
   app.use(express.static(webDist));
-  app.get("*", (_req: Request, res: Response) => res.sendFile(path.join(webDist, "index.html")));
+  // Express 5 no longer accepts "*" string routes; use a regex catch-all.
+  app.get(/.*/, (_req: Request, res: Response) => res.sendFile(path.join(webDist, "index.html")));
 }
 
 const port = Number(process.env.PORT || 3001);
