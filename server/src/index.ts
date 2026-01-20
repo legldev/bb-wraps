@@ -205,7 +205,7 @@ app.delete("/api/wraps/:id", auth, async (req: Request, res: Response) => {
 
 /** PROD: servir React build */
 if (isProd) {
-  const webDist = path.join(__dirname, "../../web/dist");
+  const webDist = path.resolve(process.cwd(), "../web/dist");
   app.use(express.static(webDist));
   // Express 5 no longer accepts "*" string routes; use a regex catch-all.
   app.get(/.*/, (_req: Request, res: Response) => res.sendFile(path.join(webDist, "index.html")));
