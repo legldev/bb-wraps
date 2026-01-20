@@ -40,7 +40,7 @@ export default function App() {
     <div>
       <header className="topbar">
         <div className="topbar-inner">
-          <Link to="/" className="brand">Wraps</Link>
+          <Link to="/" className="brand">🍔 Burger Wraps</Link>
 
           <div className="topbar-right">
             {me ? (

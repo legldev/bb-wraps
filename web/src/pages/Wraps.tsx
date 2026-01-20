@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "../api";
+import { api, getApiErrorMessage } from "../api";
 import { Link } from "react-router-dom";
 
 type WrapItem = { id: string; name: string; date: string; notes?: string | null };
@@ -37,8 +37,8 @@ export default function Wraps() {
         body: JSON.stringify({ title, kind, year: Number(year) }),
       });
       await load();
-    } catch {
-      setErr("No pude crear el wrap.");
+    } catch (error) {
+      setErr(getApiErrorMessage(error, "No pude crear el wrap."));
     }
   }
 

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { api } from "../api";
+import { api, getApiErrorMessage } from "../api";
 
 type WrapItem = { id: string; name: string; date: string; notes?: string | null };
 type Wrap = { id: string; title: string; kind: string; year: number; items: WrapItem[]; createdAt: string };
@@ -58,8 +58,8 @@ export default function WrapDetail() {
       setName("");
       setNotes("");
       await load();
-    } catch {
-      setErr("No pude agregar el item.");
+    } catch (error) {
+      setErr(getApiErrorMessage(error, "No pude agregar el item."));
     }
   }
 
@@ -110,8 +110,8 @@ export default function WrapDetail() {
             </label>
 
             <label>
-              Notas (opcional)
-              <input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ej: Boraz / Méx" />
+              Lugar
+              <input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Ej: mcdonalds" />
             </label>
 
             {err && <div className="error">{err}</div>}

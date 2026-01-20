@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "../api";
+import { api, getApiErrorMessage } from "../api";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Register({ onAuthed }: { onAuthed: () => Promise<void> }) {
@@ -21,8 +21,8 @@ export default function Register({ onAuthed }: { onAuthed: () => Promise<void> }
       });
       await onAuthed();
       nav("/wraps");
-    } catch {
-      setErr("No pude registrar. Capaz email o username ya existe, o el password es corto.");
+    } catch (error) {
+      setErr(getApiErrorMessage(error, "No pude registrar. Revisa los datos."));
     } finally {
       setBusy(false);
     }

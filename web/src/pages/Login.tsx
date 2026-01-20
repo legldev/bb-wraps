@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "../api";
+import { api, getApiErrorMessage } from "../api";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login({ onAuthed }: { onAuthed: () => Promise<void> }) {
@@ -20,8 +20,8 @@ export default function Login({ onAuthed }: { onAuthed: () => Promise<void> }) {
       });
       await onAuthed();
       nav("/wraps");
-    } catch (e: any) {
-      setErr("No pude iniciar sesión. Revisa username/contraseña.");
+    } catch (error) {
+      setErr(getApiErrorMessage(error, "No pude iniciar sesion. Revisa username/contrasena."));
     } finally {
       setBusy(false);
     }
