@@ -23,6 +23,7 @@ model Wrap {
   title     String
   kind      String     // ej: "burgers"
   year      Int
+  publicSlug String?   @unique
   createdAt DateTime   @default(now())
   userId    String
   user      User       @relation(fields: [userId], references: [id])

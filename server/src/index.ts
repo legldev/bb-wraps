@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import path from "path";
+import crypto from "crypto";
 
 // --- Extend Express Request to store userId
 declare global {
@@ -36,6 +37,19 @@ const isProd = process.env.NODE_ENV === "production";
 
 function signToken(userId: string) {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "30d" });
+}
+
+function makePublicSlug() {
+  return crypto.randomBytes(6).toString("base64url");
+}
+
+async function createUniquePublicSlug() {
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    const publicSlug = makePublicSlug();
+    const existing = await prisma.wrap.findUnique({ where: { publicSlug } });
+    if (!existing) return publicSlug;
+  }
+  throw new Error("No pude crear un slug publico");
 }
 
 function auth(req: Request, res: Response, next: NextFunction) {
@@ -153,6 +167,34 @@ app.get("/api/wraps", auth, async (req: Request, res: Response) => {
   return res.json(wraps);
 });
 
+app.get("/api/wraps/:id", auth, async (req: Request, res: Response) => {
+  const userId = req.userId!;
+  const wrapId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+
+  const wrap = await prisma.wrap.findFirst({
+    where: { id: wrapId, userId },
+    include: { items: { orderBy: { date: "desc" } } },
+  });
+
+  if (!wrap) return res.status(404).json({ error: "Wrap no existe" });
+  return res.json(wrap);
+});
+
+app.get("/api/public/wraps/:slug", async (req: Request, res: Response) => {
+  const slug = Array.isArray(req.params.slug) ? req.params.slug[0] : req.params.slug;
+
+  const wrap = await prisma.wrap.findUnique({
+    where: { publicSlug: slug },
+    include: {
+      user: { select: { username: true } },
+      items: { orderBy: { date: "desc" } },
+    },
+  });
+
+  if (!wrap) return res.status(404).json({ error: "Wrap publico no existe" });
+  return res.json(wrap);
+});
+
 app.post("/api/wraps", auth, async (req: Request, res: Response) => {
   const userId = req.userId!;
   const parsed = wrapCreateSchema.safeParse(req.body);
@@ -188,6 +230,43 @@ app.post("/api/wraps/:id/items", auth, async (req: Request, res: Response) => {
   });
 
   return res.json(item);
+});
+
+const publicSchema = z.object({
+  isPublic: z.boolean(),
+});
+
+app.patch("/api/wraps/:id/public", auth, async (req: Request, res: Response) => {
+  const userId = req.userId!;
+  const wrapId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const parsed = publicSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+  const wrap = await prisma.wrap.findFirst({ where: { id: wrapId, userId } });
+  if (!wrap) return res.status(404).json({ error: "Wrap no existe" });
+
+  const publicSlug = parsed.data.isPublic ? wrap.publicSlug ?? await createUniquePublicSlug() : null;
+  const updated = await prisma.wrap.update({
+    where: { id: wrapId },
+    data: { publicSlug },
+    include: { items: { orderBy: { date: "desc" } } },
+  });
+
+  return res.json(updated);
+});
+
+app.delete("/api/wraps/:id/items/:itemId", auth, async (req: Request, res: Response) => {
+  const userId = req.userId!;
+  const wrapId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const itemId = Array.isArray(req.params.itemId) ? req.params.itemId[0] : req.params.itemId;
+
+  const item = await prisma.wrapItem.findFirst({
+    where: { id: itemId, wrap: { id: wrapId, userId } },
+  });
+  if (!item) return res.status(404).json({ error: "Item no existe" });
+
+  await prisma.wrapItem.delete({ where: { id: itemId } });
+  return res.json({ ok: true });
 });
 
 app.delete("/api/wraps/:id", auth, async (req: Request, res: Response) => {

@@ -13,6 +13,10 @@ const FIELD_LABELS: Record<string, string> = {
 };
 
 type ZodFieldErrors = Record<string, string[] | undefined>;
+type ApiErrorPayload = {
+  error?: string | { fieldErrors?: ZodFieldErrors; formErrors?: string[] };
+  message?: string;
+};
 
 export class ApiError extends Error {
   status: number;
@@ -49,18 +53,20 @@ function formatFieldErrors(fieldErrors: ZodFieldErrors) {
   return parts.join(" • ");
 }
 
-function extractErrorMessage(payload: any) {
+function extractErrorMessage(payload: unknown) {
   if (!payload) return null;
   if (typeof payload === "string") return payload;
-  if (typeof payload.error === "string") return payload.error;
-  if (payload.error?.fieldErrors) {
-    const formatted = formatFieldErrors(payload.error.fieldErrors as ZodFieldErrors);
+  if (typeof payload !== "object") return null;
+  const data = payload as ApiErrorPayload;
+  if (typeof data.error === "string") return data.error;
+  if (typeof data.error === "object" && data.error?.fieldErrors) {
+    const formatted = formatFieldErrors(data.error.fieldErrors);
     if (formatted) return formatted;
   }
-  if (Array.isArray(payload.error?.formErrors) && payload.error.formErrors.length) {
-    return payload.error.formErrors.join(" ");
+  if (typeof data.error === "object" && Array.isArray(data.error?.formErrors) && data.error.formErrors.length) {
+    return data.error.formErrors.join(" ");
   }
-  if (typeof payload.message === "string") return payload.message;
+  if (typeof data.message === "string") return data.message;
   return null;
 }
 

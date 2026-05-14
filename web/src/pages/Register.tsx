@@ -29,10 +29,16 @@ export default function Register({ onAuthed }: { onAuthed: () => Promise<void> }
   }
 
   return (
-    <div className="page">
-      <div className="card">
-        <h1>Registro</h1>
-        <p className="muted">Solo lo mínimo: email, username y password.</p>
+    <div className="auth-page">
+      <section className="auth-copy">
+        <p className="eyebrow">Nuevo wrap</p>
+        <h1>Arranca el contador y olvidate de la planilla.</h1>
+        <p>Una cuenta privada alcanza para guardar tus burgers del ano y cerrar con estadisticas simples.</p>
+      </section>
+
+      <section className="panel auth-panel">
+        <h2>Crear cuenta</h2>
+        <p className="muted">Solo email, username y contrasena.</p>
 
         <form onSubmit={submit} className="form">
           <label>
@@ -58,9 +64,9 @@ export default function Register({ onAuthed }: { onAuthed: () => Promise<void> }
         </form>
 
         <p className="muted">
-          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+          Ya tenes cuenta? <Link to="/login">Entrar</Link>
         </p>
-      </div>
+      </section>
     </div>
   );
 }

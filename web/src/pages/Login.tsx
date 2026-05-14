@@ -28,10 +28,16 @@ export default function Login({ onAuthed }: { onAuthed: () => Promise<void> }) {
   }
 
   return (
-    <div className="page">
-      <div className="card">
-        <h1>Login</h1>
-        <p className="muted">Entra con tu username.</p>
+    <div className="auth-page">
+      <section className="auth-copy">
+        <p className="eyebrow">Burger Wrap Counter</p>
+        <h1>Tu balance anual de burgers, privado y sin vueltas.</h1>
+        <p>Entra, suma cada burger y deja que el resumen se arme solo.</p>
+      </section>
+
+      <section className="panel auth-panel">
+        <h2>Entrar</h2>
+        <p className="muted">Usa tu username y contrasena.</p>
 
         <form onSubmit={submit} className="form">
           <label>
@@ -52,9 +58,9 @@ export default function Login({ onAuthed }: { onAuthed: () => Promise<void> }) {
         </form>
 
         <p className="muted">
-          ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
+          No tenes cuenta? <Link to="/register">Crear cuenta</Link>
         </p>
-      </div>
+      </section>
     </div>
   );
 }

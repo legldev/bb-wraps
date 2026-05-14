@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "db:deploy": "DB_URL=${DATABASE_URL:-file:./dev.db}; DB_FILE=${DB_URL#file:}; mkdir -p \"$(dirname \"$DB_FILE\")\" && touch \"$DB_FILE\" && DATABASE_URL=\"$DB_URL\" prisma migrate deploy",
     "build": "prisma generate && tsc",
-    "start": "node dist/src/index.js"
+    "start": "npm run db:deploy && node dist/src/index.js"
   },
   "keywords": [],
   "author": "",
