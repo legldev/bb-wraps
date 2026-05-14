@@ -6,7 +6,7 @@ const FIELD_LABELS: Record<string, string> = {
   password: "Password",
   title: "Titulo",
   kind: "Tipo",
-  year: "Ano",
+  year: "Año",
   name: "Nombre",
   date: "Fecha",
   notes: "Notas",

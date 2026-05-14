@@ -31,7 +31,7 @@ export default function SocialWrapCard({ wrap, publicUrl }: { wrap: SocialWrap; 
       </div>
 
       <div className="social-card-main">
-        <p className="social-owner">{wrap.user ? `@${wrap.user.username}` : "Mi wrap del ano"}</p>
+        <p className="social-owner">{wrap.user ? `@${wrap.user.username}` : "Mi wrap del año"}</p>
         <h2>{stats.total}</h2>
         <p>{stats.total === 1 ? "burger registrada" : "burgers registradas"}</p>
       </div>

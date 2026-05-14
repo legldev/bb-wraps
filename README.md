@@ -1,11 +1,11 @@
 # Burger Wrap Counter
 
-Un MVP para contar cuantas burgers comiste durante el ano y cerrar diciembre con un resumen simple para compartir.
+Un MVP para contar cuantas burgers comiste durante el año y cerrar diciembre con un resumen simple para compartir.
 
 ## Que incluye
 
 - Cuenta privada con registro, login y cookie HTTP-only.
-- Un wrap por ano o por categoria.
+- Un wrap por año o por categoria.
 - Carga rapida de burgers con nombre, fecha y lugar.
 - Historial ordenado por fecha.
 - Borrado de burgers cargadas por error.

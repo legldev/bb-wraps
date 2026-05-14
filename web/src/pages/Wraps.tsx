@@ -52,9 +52,9 @@ export default function Wraps() {
       <section className="hero">
         <div>
           <p className="eyebrow">MVP privado</p>
-          <h1>Conta tus burgers del ano sin convertirlo en una app gigante.</h1>
+          <h1>Conta tus burgers del año sin convertirlo en una app gigante.</h1>
           <p className="hero-copy">
-            Crea un contador por ano, carga cada burger con fecha y lugar, y al cierre tenes un resumen simple para compartir.
+            Crea un contador por año, carga cada burger con fecha y lugar, y al cierre tenes un resumen simple para compartir.
           </p>
         </div>
         <div className="hero-stats" aria-label="Resumen">
@@ -89,7 +89,7 @@ export default function Wraps() {
 
             <div className="field-row">
               <label>
-                Ano
+                Año
                 <input type="number" value={year} onChange={(e) => setYear(Number(e.target.value))} />
               </label>
 
@@ -120,7 +120,7 @@ export default function Wraps() {
             <p className="muted">Cargando...</p>
           ) : wraps.length === 0 ? (
             <div className="empty-state">
-              <strong>Arranca con el ano actual.</strong>
+              <strong>Arranca con el año actual.</strong>
               <span>Despues solo vas sumando burgers cuando pasan.</span>
             </div>
           ) : (

@@ -33,7 +33,7 @@ export default function Register({ onAuthed }: { onAuthed: () => Promise<void> }
       <section className="auth-copy">
         <p className="eyebrow">Nuevo wrap</p>
         <h1>Arranca el contador y olvidate de la planilla.</h1>
-        <p>Una cuenta privada alcanza para guardar tus burgers del ano y cerrar con estadisticas simples.</p>
+        <p>Una cuenta privada alcanza para guardar tus burgers del año y cerrar con estadisticas simples.</p>
       </section>
 
       <section className="panel auth-panel">
